@@ -20,9 +20,9 @@ vertex* InitializeGraph(vertex* h);	//그래프 초기화(ptr_vertex, visited, l
 int InsertVertex();					//그래프에 정점(vertex)추가
 int InsertEdge();					//그래프에 간선(edge)추가
 void DFS(int v);				//깊이우선 탐색
-void BFS(int v);				//너비우선 탐색
+/*void BFS(int v);				//너비우선 탐색
 void PrintGraph(vertex* h);			//그래프의 인접리스트 출력
-int FreeVertex();					//list에 저장된 각 vertex 해제
+int FreeVertex();					//list에 저장된 각 vertex 해제*/
 
 int Initialize_visited();	//visited 배열 초기화
 
@@ -65,7 +65,7 @@ int main(void){
 				DFS(v);
 				break;
 			}
-			case 'b': case 'B':{
+			/*case 'b': case 'B':{
 				printf("start point : ");
 				scanf("%d",&v);
 				BFS(v);
@@ -78,7 +78,7 @@ int main(void){
 			case 'q': case 'Q':{
 				FreeVertex(h);
 				break;
-			}
+			}*/
 		}
 		getchar();
 	}while(choice != 'q' && choice != 'Q');
@@ -91,7 +91,7 @@ vertex* InitializeGraph(vertex* h){
 		printf("nothing to initialize\n"); return NULL;
 	}
 	else{
-		FreeVertex();
+		//FreeVertex();
 		ptr_vertex=0;
 		for(int i=0; i < MAX_VERTEX; i++){
 			visited[i]=false;
@@ -110,6 +110,7 @@ int InsertVertex(){
 	}
 	new->key=key;
 	new->vertex_num=ptr_vertex;	//vertex의 고유 vertex번호
+	new->link =NULL;
 
 	list[ptr_vertex++]=new;		//vertex를 인접리스트에 추가
 	return 1;
@@ -127,13 +128,15 @@ int InsertEdge(){	//오름차순 으로 정렬해서 search시 vertex번호가 �
 		/*if(to==from){
 			printf("시작과 종료를 다르게 해주세요\n"); continue;
 		}*/
-		if(from < 0 || from >ptr_vertex || to < 0 || to >ptr_vertex){
-			printf("정점의 범위를 벗어났습니다.\n"); continue;
+		
+		if(from < 0 || from >=ptr_vertex || to < 0 || to >=ptr_vertex){
+			printf("현재 입력가능한 vertex의 범위를 벗어났습니다.\n"); continue;
 		}
 		break;
 	}
 	/* 인접리스트에 저장된 vertex에 연결할 새로운 vertex*/
 	vertex* new = (vertex*)malloc(sizeof(vertex));
+	if(new == NULL){printf("fail to malloc\n"); return -1;}
 	new->vertex_num = to;
 	new->link = NULL;
 	
@@ -175,11 +178,19 @@ void DFS(int v){
 			DFS(h->vertex_num);
 		}
 	}
+	printf("\n");
+	return;
 }	//깊이우선 탐색
-void BFS(int v){
+/*void BFS(int v){
 	Initialize_visited();	//visited 배열 초기화
 
 
 }	//너비우선 탐색
 void PrintGraph(vertex* h);			//그래프의 인접리스트 출력
-int FreeVertex();		//각 vertex 해제
+int FreeVertex();		//각 vertex 해제*/
+int Initialize_visited(){
+	for(int i=0; i < MAX_VERTEX; i++){
+		visited[i]=false;
+	}
+	return 1;
+}
