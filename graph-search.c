@@ -60,8 +60,10 @@ int main(void){
 				break;
 			}
 			case 'd': case 'D':{
+				/*시작정점 입력*/
 				printf("start point : ");
 				scanf("%d",&v);
+				Initialize_visited();	//DFS전 visited 배열 초기화
 				DFS(v);
 				break;
 			}
@@ -156,19 +158,25 @@ int InsertEdge(){	//오름차순 으로 정렬해서 search시 vertex번호가 �
 		if(ptr->vertex_num >= new->vertex_num){
 			trail->link=new;
 			new->link=ptr;
+			break;
 		}
 	}
+	vertex* search=list[from];
+	while(search != NULL){
+		printf("%3d",search->vertex_num);
+		search=search->link;
+	}
+
 	return 1;
 }					//그래프에 간선(edge)추가
 void DFS(int v){
-	Initialize_visited();	//visited 배열 초기화
 	/*저장된 정점이 없을 경우*/
 	if(ptr_vertex == 0){printf("nothing to Search\n"); return;}
 	/*입력받은 정점이 없을 경우나 입력받은 정점이 음수일 경우*/
 	if(v > ptr_vertex || v < 0){printf("%d is out of range",v); return;}
 
 	vertex* h; 
-	/*처음 정점을 '방문 했음'으로 바꾼다*/
+	/*DFS를 시작할 시작정점을 '방문 했음'으로 바꾼다*/
 	visited[v] = true;
 	printf("%3d",v);
 	/*처음 정점으로 부터 링크를 따라가며 재귀호출*/
