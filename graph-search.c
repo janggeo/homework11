@@ -24,6 +24,8 @@ void BFS(int v);				//너비우선 탐색
 void PrintGraph(vertex* h);			//그래프의 인접리스트 출력
 int FreeVertex();					//list에 저장된 각 vertex 해제
 
+int Initialize_visited();	//visited 배열 초기화
+
 int main(void){
 	printf("-----[2021076029] [장정환]-----\n");
 	
@@ -96,7 +98,7 @@ vertex* InitializeGraph(vertex* h){
 		}
 	}
 }	//그래프 초기화
-int InsertVertex(){
+int InsertVertex(){	
 	/*새로운 vertex가 가지는 값*/
 	int key;
 	printf("key (int형) : ");
@@ -111,9 +113,9 @@ int InsertVertex(){
 
 	list[ptr_vertex++]=new;		//vertex를 인접리스트에 추가
 	return 1;
-}				//그래프에 정점(vertex)추가
+}	//그래프에 정점(vertex)추가
 
-int InsertEdge(){
+int InsertEdge(){	//오름차순 으로 정렬해서 search시 vertex번호가 작은 순으로 방문하도록 한다.
 	int to, from;	//간선의 시작정점, 종료정점
 	vertex* ptr;
 	/*현재 존재하는 정점을 입력할때 까지 반복*/
@@ -134,31 +136,50 @@ int InsertEdge(){
 	vertex* new = (vertex*)malloc(sizeof(vertex));
 	new->vertex_num = to;
 	new->link = NULL;
-
+	
+	/*시작정점의 인접리스트*/
 	ptr=list[from];
-	while(ptr->link != NULL){
-		ptr = ptr->link;
+	vertex* trail=NULL;
+	/*오름차순으로 정렬해서 인접리스트에 추가*/
+	while(ptr != NULL)
+	{	
+		trail=ptr;
+		ptr=ptr->link;
+		/*인접리스트에 추가된 간선이 없는경우(처음추가할경우)*/
+		if(ptr == NULL){
+			trail->link = new;
+			break;}
+		/*new의 vertex넘버보다 큰 넘버가 나올경우 new를 그 앞에 추가*/
+		if(ptr->vertex_num >= new->vertex_num){
+			trail->link=new;
+			new->link=ptr;
+		}
 	}
-	ptr->link = new;
-
 	return 1;
 }					//그래프에 간선(edge)추가
 void DFS(int v){
+	Initialize_visited();	//visited 배열 초기화
+	/*저장된 정점이 없을 경우*/
 	if(ptr_vertex == 0){printf("nothing to Search\n"); return;}
+	/*입력받은 정점이 없을 경우나 입력받은 정점이 음수일 경우*/
 	if(v > ptr_vertex || v < 0){printf("%d is out of range",v); return;}
 
-	vertex* h;
+	vertex* h; 
+	/*처음 정점을 '방문 했음'으로 바꾼다*/
 	visited[v] = true;
 	printf("%3d",v);
+	/*처음 정점으로 부터 링크를 따라가며 재귀호출*/
 	for(h=list[v]; h; h = h->link){
+		/*정점을 방문하지 않았을 경우 재귀호출*/
 		if(!visited[h->vertex_num]){
 			DFS(h->vertex_num);
 		}
 	}
 }	//깊이우선 탐색
 void BFS(int v){
-	
-}				//너비우선 탐색
+	Initialize_visited();	//visited 배열 초기화
+
+
+}	//너비우선 탐색
 void PrintGraph(vertex* h);			//그래프의 인접리스트 출력
 int FreeVertex();		//각 vertex 해제
-
