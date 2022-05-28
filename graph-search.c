@@ -269,19 +269,21 @@ void PrintGraph(){	//그래프의 인접리스트 출력
 	}
 }
 int FreeVertex(){	
+	int check = 1;
 	if(ptr_vertex==0){
 		printf("nothing to free\n"); return -1;
 	}
-	vertex* ptr = list[0];	//인접리스트를 가리킬 포인터
+	vertex* ptr ;	//인접리스트를 가리킬 포인터
 	vertex* rear= NULL;
-	for(int i=0; i<ptr_vertex; i++){
+	for(int i=0; i<ptr_vertex; i++){ //각 정점의 인접리스트에 대해 free
+		ptr=list[i];	//vertex의 인접리스트를 가리킬 ptr
 		while(ptr != NULL){
-			rear=ptr;
+			rear=ptr;	//ptr을 뒤따라간다
 			ptr=ptr->link;
-			free(rear);
-			printf("free\n");
+			printf("%3d",rear->vertex_num);	//free가 잘 되었는지 확인
+			free(rear);	//rear free
 		}
-		ptr=list[i];	//각 정점의 인접리스트에 대해 free
+		printf("\n");
 	}
 	return 1;
 }		//각 vertex 해제
